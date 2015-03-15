@@ -1,0 +1,9 @@
+#Enyil Padilla Valle
+* Approximately how many errors did you find and have to correct?
+around 6 erros, which count to 8 lines of code.
+
+* Why did the program not perform all the iterations as expected?
+Because on line 19, the loop was $s1 < 3 instead of $s1 < 4 or $s1 <= 3;
+
+* How much easier would the program have been to debug if it had been commented?
+A lot easier. I wouldn't have to go through each single instruction to figure what it was doing.

@@ -1,3 +1,4 @@
+#Enyil Padilla
 .data
             welcome:  .asciiz "Welcome to the mysterious MIPS Program\n"
             msg_iterate: .asciiz "Iteration: "
@@ -9,14 +10,14 @@
                       .word 39        
                       
  .text
-            la $v0, welcome #$v0 = "Welcome...."
+            la $a0, welcome #$v0 = "Welcome...." #modified
             jal printstr #prints
     
             la $s0, first #loads first array
             ori $s4, 0x0   #sets $s4 to 0
             move $s1, $zero #sets $s1 to $zero
             
-loop: 	slt $s2, $s1, 0x03  #if($s1 < 3) $s2 = 1 else $s2 = 0
+loop: 	slti $s2, $s1, 0x04  #if($s1 < 3) $s2 = 1 else $s2 = 0  			#modified 
             beq $s2, $zero, end #if($s2 == zero) exit();
             lw $s3, 0($s0) #$s3 = first[0];
            
@@ -27,17 +28,22 @@ loop: 	slt $s2, $s1, 0x03  #if($s1 < 3) $s2 = 1 else $s2 = 0
             jal printstr #prints
             
             move $a0, $s1 # $a0 = $s1
-            jal printstr # prints
+            jal writeint # prints 	#modified
            
             la $a0, linebreak #$a0 = "\n";
             jal printstr #prints
             
             j loop #goes back to loop
             
-end: move $4, $20
+end: move $a0, $s4  #modified
             jal writeint
             j _exit
             
 printstr:	li $v0, 4
 		syscall
 		jr $ra
+		
+writeint:	li $v0, 1 #added
+		syscall
+		jr $ra	
+_exit:	#added
