@@ -1,6 +1,6 @@
 	.data
 fnf:	.ascii  "The file was not found: "
-file:	.asciiz	"C:\\data.txt"
+file:	.asciiz	"~/Documents/comp3410-pa2/PA2_input1.txt"
 cont:	.ascii  "File contents: "
 buffer: .space 1024
  
