@@ -1,5 +1,5 @@
 .data
-	file:	.asciiz "list.txt"
+	file:	.asciiz "linkedlist"
 	outf:	.asciiz "outputfile.txt"
 	buffer:	.space 1024
 	
@@ -60,12 +60,12 @@
 	la $a2, pos	# Loads the buffer to print
 	jal itoa	# Parses it
 	
-	li $v0, 15	
-	move $a0, $s2
-	la $a1, outro
-	move $a2, $zero
-	addi $a2, $a2, 43
-	add $a2, $a2, $s4
+	li $v0, 15	# file service
+	move $a0, $s2	# File descriptor
+	la $a1, outro	# Moves the output string to the arg
+	move $a2, $zero	# Zeroes it
+	addi $a2, $a2, 44	# Num characters to write
+	add $a2, $a2, $s4	# Including the number we used.
 	syscall
 	
 	li $v0, 10
