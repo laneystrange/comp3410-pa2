@@ -1,0 +1,15 @@
+Welcome to the Fisher Linked List Reader.
+Loading file..
+
+18
+49
+105
+95
+62
+82
+5
+-95
+-201
+-12
+92
+End of list at element: 10

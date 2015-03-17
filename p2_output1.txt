@@ -1,0 +1,23 @@
+Welcome to the Fisher Number Sorter.
+Loading file..
+Results:
+-220
+-218
+-68
+-28
+-26
+-19
+-18
+-12
+15
+17
+21
+25
+28
+51
+59
+63
+95
+96
+120
+-- program is finished running --
