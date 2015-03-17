@@ -41,7 +41,7 @@ linebreak: .ascii "\n"		#line break
 	la $a0, array
 	move $a1, $v1		
 	move $s1, $v1		
-	jal selsort		
+	jal sort		
 	jal zerotemps
 	
 	
@@ -68,6 +68,18 @@ linebreak: .ascii "\n"		#line break
 	syscall			# Writes to the file
 	
 	j done
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 #method that is used to convert the ascii characters to ints for the int arrray
 asciiToInt:
@@ -100,7 +112,61 @@ finalStep:
 	mul $t6, $t6, -1
 	j storeTOArray
 
+store:
+	sw $t6, 0($a1)		# Stores the current integer in the array
+	addi $a1, $a1, 4	# increase the array pointer 1 indexes (4 bytes)
+	addi $t9, $t9, 1	# increse the byte variable one to access the next byte
+	move $t6, $zero		# reset t6 to zero
+	beq $t0, 0, asciiToIntFinished	# Null terminator
+	addi $t4, $t4, 1	# Increments the number of items the array has
+	j reset
+	
+asciiToIntFinished:
+	move $v0, $a1
+	move $v1, $t4
+	jr $ra
+	
+	
+	
+	
+	
+	
+	
+	
+	
+#sorting method	
+sort:
+	#set up the counters
+	move $t0, $zero
+	move $t2, $a0
+	move $t3, $zero
+	
+newround:
+	li $t3,0 		#makes the iteration cointer to zero
+	move $t4, $t2		#
+	li $t1, 0		#our min is now zero
+	
+iterate:
+	beq $a1, 0, sortdone	# if the number of elements is equal zero then end sort
+	lw $t0, 0($t4)		# load the left most element into the array
+	blt $t0, $t1, setmin	# if the current number is the min of the array go to 
+				#the set min label to place the min into the min variable
+				#to t1
+	
+resumeIreration:
+	addi $t3, $t3 1 	#add one to the iteration counter variable
+	addi $t4, $t4, 4	#add four to the memory adress of the the current
+				#array adress to get the next one
+	beq $t3, $a1, sort	#Once the array as been iterated through go to the sort routine
+	
+sort:
+	
+	
 
+	
+	
+	
+	
 	
 
 # Error
