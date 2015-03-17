@@ -1,0 +1,36 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1343\cocoasubrtf160
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww13900\viewh11160\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs24 \cf0 Problem 1:\
+\
+The changes I had to make are as follows:\
+1.        slt -> slti, because we used an immediate\
+\
+2.        la $v0, welcome ->  la $a0, welcome\
+	syscall arguments must be in a0, not v0\
+\
+3.	add $s0, $s0, 0x4 -> addi $s0, $s0, 0x4\
+	adding immediate\
+\
+4.	move $a0, $s1		\
+           jal printstr\
+	->\
+	move $a0, $s1		\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0            jal printint\
+	It\'92s printing an int, not a string, so I added a subroutine to print integers\
+\
+5.	j _exit\
+	I added an _exit subroutine\
+\
+6.	slti $s2, $s1, 0x03 -> slti $s2, $s1, 0x04\
+	It only iterated three times, instead of 4\
+\
+So I corrected about 6 things.\
+\
+The program didn\'92t perform all iterations because the slti command was comparing to 3, instead of 4, so it only did 3 iterations.\
+\
+The program would have been much easier to fix if it was commented, but that takes the fun out of it :). Reverse engineers deal with this exact thing all day. Making sense of assembly code is a challenge, but it is like a puzzle.}
