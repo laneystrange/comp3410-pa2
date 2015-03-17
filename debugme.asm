@@ -16,7 +16,7 @@
             ori $s4, 0x0
             move $s1, $zero
             
-loop: 	slt $s2, $s1, 0x03
+loop: 	slti $s2, $s1, 0x03
             beq $s2, $zero, end
             lw $s3, 0($s0)
            
@@ -35,9 +35,11 @@ loop: 	slt $s2, $s1, 0x03
             j loop
             
 end: move $4, $20
-            jal writeint
+            jal printstr
             j _exit
             
 printstr:	li $v0, 4
 		syscall
 		jr $ra
+
+_exit:
