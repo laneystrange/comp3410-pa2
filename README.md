@@ -1,9 +1,8 @@
-## Claire Skaggs
-## COMP 3410
-## Programming Assignment 2
+### Claire Skaggs
+##### COMP 3410
+##### Programming Assignment 2
 
-
-### PART ONE
+###### PART ONE
 
 My answer to part one is located in the original debugme.asm file, which I have modified.
 Initally, as mentioned in the instructions, debugme.asm failed to assemble.
@@ -18,12 +17,12 @@ In total I made six changes to debugme.asm to ensure that the program both assem
 
 After these modifications, debugme.asm has the following output when executed:
 
-Welcome to the mysterious MIPS Program
-Iteration: 1
-Iteration: 2
-Iteration: 3
-Iteration: 4
-100
+- Welcome to the mysterious MIPS Program
+- Iteration: 1
+- Iteration: 2
+- Iteration: 3
+- Iteration: 4
+- 100
 
 
 
