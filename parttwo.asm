@@ -13,66 +13,63 @@ output_file:	.asciiz "PA2_output1.txt"
 
 .text
 main:
-
-open_file:
-li $v0, 13
-la $a0, input_file
-li $a1, 0
+li $v0, 13			# store the integer value for open file, 13, into $v0
+la $a0, input_file		# load the 'input_file' memory address into $a0
+li $a1, 0			# store the integer value for the read-only flag into $a1
 li $a2, 0
-syscall
-move $s6, $v0
+syscall				# issue the open file syscall
+move $s6, $v0			# move the file descriptor from $v0 into $s6
 
-read_file:
-li $v0, 14
-move $a0, $s6
-la $a1, input_buffer
-li $a2, 1024
-syscall
+li $v0, 14			# store the integer value for read file, 14, into $v0
+move $a0, $s6			# move the file descriptor from $s6 into $a0
+la $a1, input_buffer		# load the 'input_buffer' memory address into $a1
+li $a2, 1024			# load the 'input_buffer' size into $a2
+syscall				# issue the read file syscall
 
-close_file:
-li $v0, 16
-move $a0, $s6
-syscall
+li $v0, 16			# store the integer value for close file, 15, into $v0
+move $a0, $s6			# move the file descriptor from $s6 into $a0
+syscall				# issue the close file syscall
 
-covert_to_ints:
 la $a0, input_buffer		# store the memory address of 'input_buffer' into $a0
 la $a1, array			# store the memory address of 'array' into $a1
 jal ttoz			# jump to the 'ttoz' function then return
 jal atoi			# jump to the 'atoi' function then return
-move $s1, $v1			# store the number of integers in the array to $s1 for later
+move $s0, $v1			# store the number of integers in the array to $s0 
 
-open_new_file:
-li $v0, 13
-la $a0, output_file
-li $a1, 1
-li $a2, 0
-syscall
-move $s2, $v0
+move $a0, $s0			# store the number of integers in the array to $a0
+jal ttoz			# jump to the 'ttoz' function then return
+jal sort			# jump to the 'sort' function then return
 
-convert_to_string:
-la $a0, array
-move $a1, $s1
-la $a2, output_buffer
+la $a0, array			# store the memory address of 'array' into $a0
+move $a1, $s0			# store the number of integers in the array to $a1
+la $a2, output_buffer		# store the memory address of 'output_buffer' into $a0
 jal ttoz			# jump to the 'ttoz' function then return
 jal itoa			# jump to the 'itoa' function then return
 
-write_new_file:
-li $v0, 15
-move $a0, $s2
-la $a1, output_buffer
-li $a2, 1024
-syscall
+li $v0, 13			# store the integer value for open file, 13, into $v0
+la $a0, output_file		# load the 'output_file' memory address into $a0
+li $a1, 1			# store the integer value for the wri flag into $a1
+li $a2, 0
+syscall				# issue the open file syscall
+move $s7, $v0			# move the file descriptor from $v0 into $s7
+
+li $v0, 15			# store the integer value for write to file, 15, into $v0
+move $a0, $s7			# move the file descriptor from $s7 into $a0
+la $a1, output_buffer  		# load the 'output_buffer' memory address into $a1
+li $a2, 1024			# load the 'output_buffer' size into $a2
+syscall 			# issue the write to file syscall
 
 exit:
-li $v0, 10			# stores syscall exit program value, 10, into $v0
-syscall				# issues syscall to exit the program
+li $v0, 10			# store the integer value for exit, 10, into $v0
+syscall				# issue the exit syscall
 
 ##################################################################
 # atoi - converts ASCII values to Integer values and stores them #
 ##################################################################
+# ARGUMENTS:							 #
 # $a0 = memory address of the buffer				 #
 # $a1 = memory address of the array				 #
-# $t0 = memory address of the buffer copy			 #
+# RETURNS:							 #
 # $v0 = the array of converted integers to be returned		 #
 # $v1 = the number of integers in the array to be returned	 #
 ##################################################################
@@ -119,10 +116,10 @@ jr $ra				# return to the line where the 'atoi' function was called
 ##################################################################
 # itoa - converts Integer values to ASCII values and stores them #
 ##################################################################
+# ARGUMENTS:							 #
 # $a0 = memory address of the array of integers to convert	 #
 # $a1 = number of integers stored in the array $a0		 #
 # $a2 = memory address of the space to place the result integers #
-# $v0 = the buffer of converted integers to be returned		 #
 ##################################################################
 itoa:
 move $t0, $a0			# copy the memory address of the integer array $a0 into $t0
@@ -190,6 +187,36 @@ move $t1, $zero			# make sure $t1 is 0
 addi $t1, $t1, 0		# add the ASCII value for the null terminator chracter to $t1
 sb $t1, 0($a2)			# store this newline character from $t1 to the current byte of the buffer, $a2
 jr $ra				# return to the line where the 'itoa' function was called
+
+##################################################################
+# sort - bubblesorts the integers in the argument array		 #
+##################################################################
+# ARGUMENTS:							 #
+# $a0 = number of integers to sort				 #
+##################################################################
+sort:
+la $t0, array 			# load the memory address of the 'array' in $t0
+mul $t7, $a0, 4			# multiply the number of integers by 4 to find the total number of bytes
+add $t0, $t0, $t7 		# sets $t0 to $t0 added to the total number of bytes
+
+sort_outer_loop:
+add $t1, $0, $0			# when $t1 = 1 the list is sorted
+la $a0, array 			# load the memory address of 'array' in $a0
+
+sort_inner_loop:
+lw $t2, 0($a0) 			# $t2 = index i of the array
+lw $t3, 4($a0) 			# $t3 = index i + 1 of the array
+slt $t4, $t3, $t2 		# if $t3 < $t2, then $t4 = 1, else $t4 = 0
+beq $t4, $0, sort_swap 		# if $t4 = 0, then jump to 'sort_swap', else continue
+add $t1, $0, 1 			# recheck after a swap, so set $t1 to 1
+sw $t2, 4($a0)			# $t2 = index i + 1
+sw $t3, 0($a0) 			# $t3 = index i
+
+sort_swap:
+addi $a0, $a0, 4 		# increment the array by 4 bytes
+bne $a0, $t0, sort_inner_loop	# if $a0 != to the end of the array, jump to innerloop
+bne $t1, $0, sort_outer_loop	# if $t1 == one the list isn't fully sorted, jump to outerloop
+jr $ra				# return to the line where the 'sort' function was called
 
 ##################################################################
 # ttoz - zeros out all temporary register values		 #
