@@ -3,6 +3,7 @@
 # Part 3
 
 # I forgot I didn't finish this... 
+# UPDATE; I tried to get as much done as I could... Please jump to the linked list label.
 
 .data
 			.align 2
@@ -95,29 +96,33 @@ exitatoi:
 #####################################################################################################################################
 linkedlist:
 	
-        la	$s0,array
-        la	$t1, buffer      	# get pointer to head
-        lw    	$a0,0($s0) 
-loop:     
-	beqz  	$s0,done      		# while not null
-        #lw    	$a0,0($s0)     	 	#   get the data 
-        add	$t2, $zero, $a0
-        move	$t3, $a0
+        la	$a0, array		# $a0 set to the address of the array
+        add	$a0, $a0, $s1		# add the total number of bytes to $a0, now we have a reference to the end of the LL.
+        la	$s0, array		# $s0 set to the beginning of the array
+        add	$t7, $zero, $s0		# $t7 temp variable pointer to the beginning of the array
+        add	$t6, $zero, $a0		# $t6 temp variable pointer to the end of the array
         
-        li    	$v0,1          		#   print it
-        syscall               		#
-        la     	$a0,sep        		#   print separator
-        li     	$v0,4
-        syscall
-        addi	$s0, $s0, 4 
-        lw     	$s0,4($s0)
-        addi	$s0, $s0, 4    		 #   get next
-        j loop
-          
-done:   la     	$a0,linef      	
-        li     	$v0,4
-        syscall              			
-           	
+        lw	$t0, 0($s0)		# $t0 == first integer a[1]
+        lw	$t1, 4($s0)		# $t1 == second integer, i,e, index 0's pointer
+        move 	$t3, $t1		# $t3 == index 0s pointer
+        addi	$t6, $t6, -4		# this will end up deleted, testing
+        lw	$t5, ($t6)		# extract the value located at the address $t6 was pointing to
+        addi	$t6, $t6, 4		# increment the address $t6 is pointing to, more testing will be deleted
+        sub	$t4, $t6, $t7		# sub'd $t6 and $t6, got 28 the total bytes located in the array, more testing will be del'd
+        
+loop:					# main logic from the testing above
+	slti	$s2, $t3, 1		# if $t3 i.e. the pointer of index 0, is less than 1 then flag $s2
+	addi 	$t3, $t3, -1		# else decrement $t3 by one
+	beqz	$t3, store		# if $t3 == 0 then we have our next variable to store
+	addi	$t7, $t7, 4		# else increment $t7 the pointer to the beginning of the array by 4 bytes
+	bnez 	$t3, loop		# this will probably go to, if $t3 != 0 then were not done increment the array
+	
+store:
+	lw	$s5, ($t7)		# then the value will end up getting passed here to itoa function and written to the buffer
+	
+         
+        #NOTE: My apologies, I hope you will at least look through the logic to tell me if I was heading to a dead end.
+        
 
 		
 #####################################################################################################################################
@@ -173,7 +178,7 @@ loopie:
 	div 	$t5, $t5, 10		# decrease magnitude
 	sb 	$t6, 0($a2)		# write the byte to the bufferout
 	addi 	$a2, $a2, 1		# Advances the write buffer one byte
-	bne 	$t5, 0, loop		# if $t5 == 0, exit loop, else loop	
+	bne 	$t5, 0, loopie		# if $t5 == 0, exit loop, else loop	
 	
 	move 	$t6, $zero		# zero-out $t6
 	addi 	$t6, $t6, 10		# $t6 == \n
