@@ -1,0 +1,22 @@
+Part 1-B
+
+* Approximately how many errors did you find and have to correct?
+About 7 errors. Including additional code that was not present but was referenced in the instructions.
+
+
+* Why did the program not perform all the iterations as expected?
+Because it was set to perform 3 iterations instead of four, plus the shifts and jumps where innacurate.
+
+* How much easier would the program have been to debug if it had been commented?
+A lot easier. Commenting a code allows a better debugging not only for the coder but for your coleagues and supervisors.
+
+
+Output:
+Welcome to the mysterious MIPS Program
+Iteration: 1
+Iteration: 2
+Iteration: 3
+Iteration: 4
+100
+-- program is finished running --
+
