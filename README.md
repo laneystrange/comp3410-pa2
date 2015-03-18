@@ -4,7 +4,10 @@
 
 ###### PART ONE
 
-My answer to part one is located in the original debugme.asm file, which I have modified.
+My answer to 1A is located in the original debugme.asm file, which I have modified.
+My answer to 1B is as follows:
+
+
 Initally, as mentioned in the instructions, debugme.asm failed to assemble.
 In total I made six changes to debugme.asm to ensure that the program both assembles and functions properly.
 
@@ -15,6 +18,23 @@ In total I made six changes to debugme.asm to ensure that the program both assem
 5. Inside the 'end' function, I changed the line 'move $4, $20' to 'move $a0, $s4', which correctly prepares the register $s4, holding the sum, for printing.
 6. Inside the 'end' function, there was an incorrect jump to a label called '_exit'. This label was changed to 'exit'.
 
+The program failed to iterate through the loop for enough passes, as the counter register $s1 was checked with 'slt $s2, $s1, 0x03' rather than 'slti, $s2, 4'.
+In other words, it was seeing if the value of register $s1 was less than 3.
+This meant it looped 3 total times before exiting:
+
+1. $s1 = 0
+2. $s1 = 1
+3. $s1 = 2
+4. exit loop.
+
+The version I altered instead loops 4 total times before exiting:
+
+1. $s1 = 0
+2. $s1 = 1
+3. $s1 = 2
+4. $s1 = 3
+5. exit loop.
+
 After these modifications, debugme.asm has the following output when executed:
 
 - Welcome to the mysterious MIPS Program
@@ -23,6 +43,12 @@ After these modifications, debugme.asm has the following output when executed:
 - Iteration: 3
 - Iteration: 4
 - 100
+
+The program would have been much easier to debug if it had fully commented code from the start.
+MIPS, or Assembly in general, is fairly arcane and difficult to follow.
+Commenting the code gives the reader a mental window to the thought process behind the code.
+In my modified version, I commented all of the instructions, both the original lines and my additions.
+
 
 
 
