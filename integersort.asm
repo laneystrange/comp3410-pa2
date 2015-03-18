@@ -169,24 +169,30 @@ itoa:
 		# I realize I could have just used equal to 0, but I would rather do this and let the final flow on through
 		# instead of branching to some point which I will probably loop
 	
-	div	$t1, $t1, 10	# divide our power by a single 10 to ready it for conversion step
+	#div	$t1, $t1, 10	# divide our power by a single 10 to ready it for conversion step
 	
 	bgtz	$t0, convert	# go to conversion if the value is positive
 	li	$t5, 45		# store at t5 the ascii value of "-"
-	sw	$t5, ($t6)	# store the - as the first char in our result
+	sb	$t5, ($t6)	# store the - as the first char in our result
 	addi	$t6, $t6, 1	# move to the next char position
 	neg	$t0, $t0	# make it positive now!
 	
 	convert:
 		div 	$t5, $t0, $t1	# put the resulting digit of t0 divided by t1 into t5
 		addi	$t5, $t5, 48	# t5 is now the ascii value of the digit that was at t5
+		move	$s6, $t5	
 		sb	$t5, ($t6)	# store this ascii value in our table
+		addi	$t6, $t6, 1	# go to the next character place
+		mul	$t5, $t5, $t1
+		sub	$t0, $t0, $t5
 		addi	$t2, $t2, -1	# decrement the place count by 1
-		div	$t1, $t1, 10	# divide the power by 10
-		bgtz	$t2, convert	# if the count is still greater than 0, repeat
-	
+		move	$s6, $t1
+		div	$t1, $t1, 10	# divide the power by 10	
+		bgtz	$t1, convert	# if our divisor isn't 0, keep going
+	exitConvert:
+	addi	$t6, $t6, 1
 	li	$t5, 0		# load at t5 the null terminator
-	sw	$t5, ($t6)	# store the null terminator at the address of t6
+	sb	$t5, ($t6)	# store the null terminator at the address of t6
 	
 	# this will store the characters in result, it will return the number of characters in it
 	
