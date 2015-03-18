@@ -1,0 +1,13 @@
+There were six changes that needed to be made,
+ including adding 'i's for working with immediates, 
+ changing numbers for loop counters, 
+ and adding a new method within the code itself to print integers.
+
+ The reason the program didn't perform all iterations as expected was
+ a logic error when looping through. It was only performing 3 iterations
+ and thus only adding 3 of the 4 numbers.
+ 
+ The program would have been incredibly easier to fix if there were comments.
+ Without comments, you must go through the logic of the code step by step
+ in order to understand what the programmer is trying to do and thus
+ to understand what is actually wrong with the code.
