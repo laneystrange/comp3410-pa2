@@ -1,0 +1,6 @@
+There were around nine errors in the file.
+
+The loop didn't work right because it was only incrementing by 3 and not 4.
+
+It would have been much easier to see the logic of the program and know what to correct.
+As it it, sometimes I wasn't sure what they were doing.
