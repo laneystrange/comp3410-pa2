@@ -23,7 +23,7 @@ loop: 	slti $s2, $s1, 0x04 #0x03 was of incorrect type. Needs to be slti.
 	lw $s3, 0($s0)
 	
 	add $s4, $s4, $s3
-	add $s0, $s0, 0x4 #was add. Changed to addi.
+	addi $s0, $s0, 0x4 #was add. Changed to addi.
 	addi $s1, $s1, 1
 	la $a0, msg_iterate
 	jal printstr
