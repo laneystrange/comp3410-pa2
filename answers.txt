@@ -1,1 +1,4 @@
 
+1. In total I found 8 errors
+2. It did no turn all of the iterations because the counter was checking if the counter was less that three and not less then or equal to three 
+3.If comments were in the program if would have been a lot easier to figure out the errors
