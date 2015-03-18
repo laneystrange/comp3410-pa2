@@ -13,10 +13,9 @@
             jal printstr #prints string loaded into $a0   
             la $s0, first #loads address of first
             #removed two unnecessary lines, one of which made the program uncompilable
-            li $s2, 4 #loop counter
             
-loop:	    slti $s2, $s1, 0x04 #was four, needed to be three
-            beq $s2, $zero, end #when $s1 is 4, $s2 becomes zero ending the program
+loop:	    slti $s2, $s1, 0x04 #was three, needed to be four
+            beq $s2, $zero, end #when $s1 is 4, $s2 becomes zero, branching to end
             lw $s3, 0($s0) #load first value of array in memory address in $s0 into save register 3
  
             add $s4, $s4, $s3 #adds value in $s3 to $s4, saves in $s4
