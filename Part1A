@@ -1,0 +1,56 @@
+# By Dereje Arega
+# Dueday 3/18/2015
+.data
+	welcome:  .asciiz "Welcome to the mysterious MIPS Program\n"
+           msg_iterate: .asciiz "Iteration: "
+           linebreak: .asciiz "\n"
+          
+            first:    .word 21
+                      .word 14
+                      .word 26
+                      .word 39        
+                      
+ .text
+            	la $a0, welcome		
+            	jal printstr		
+            	la $s0, first		
+            	ori $s4, 0x0		
+            	move $s1, $zero		
+           	 li $t0,0X4 		# creat a register to use for slt instraction 
+loop: 		#slt $s2, $s1, 0x04	# Slt is R type instraction and the loop need to run 4 times not 3 times
+		slt $s2, $s1,$t0  	# If $s1 < $t0 assign $s2 1 if not assign $s2 to 0
+            	beq $s2, $zero, end 	 # if $s2 equal to 0 go to block end
+            	lw $s3, 0($s0)		# Load the data to register
+           
+            	add $s4, $s4, $s3	
+           	add $s0, $s0, 0x4	# Increase the memorry address
+            	addi $s1, $s1, 1	# Increas the linebreak number
+            	la $a0, msg_iterate	#loads the Iteration string.
+            	jal printstr		# Print Iteration string
+            
+           	move $a0, $s1 
+           	#jal printstr 	this instraction was not corect.	
+            		jal writeint	# the corect instraction	
+            			# Print the Iteration number
+           
+           	la $a0, linebreak	# Load linebreak
+           		jal printstr		# make a new line	
+           
+            		j loop			# loop back	
+            
+end:			move $a0, $s4 		
+            	jal writeint			
+            	#j_exit	 is not the right instraction			
+		j exit			# corection for j_exit
+printstr:		li $v0, 4	 # load string
+			syscall		 # print the string
+			jr $ra 		#Return the address
+	# creat writeint block to write integers 
+
+writeint:		li $v0, 1		# load integer			
+				syscall		# Print the integer		
+				jr $ra		#Return the address			
+
+# Create exit block to exit
+exit:			li $v0, 10
+			syscall
