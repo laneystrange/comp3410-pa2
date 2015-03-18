@@ -1,3 +1,5 @@
+#Frank Martino
+#3/17/2015
 .data
             welcome:  .asciiz "Welcome to the mysterious MIPS Program\n"
             msg_iterate: .asciiz "Iteration: "
