@@ -1,0 +1,11 @@
+Approximately how many errors did you find and have to correct?
+
+- 10 errors, give or take a few. It depends on whether you clumped printing as one error or broke it down line by line.
+
+Why did the program not perform all the iterations as expected?
+
+- The main problem was that the program didn't have correct "jal" being used. Just reading it, you are hopping all over the code.
+
+How much easier would the program have been to debug if it had been commented?
+
+- The code would have been MUCH easier to interpret and fix. Comments allow programmers to easily pickup on what a code is trying to accomplish and detailed  comments allow coders to see bugs with relative ease.
