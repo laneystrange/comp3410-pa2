@@ -1,0 +1,155 @@
+	.data
+fnf:	.ascii  "The file was not found: "
+file:	.asciiz	"PA2_input1.txt"
+fout:	.asciiz "PA2_output1.txt"
+cont:	.ascii  "File contents: "
+LB:	.asciiz "\n"
+buffer: .space 1024 #buffer with 1024 byte size
+array:	.space 1024 #array with 1024 byte size
+
+ 
+	.text
+ 
+# Open File
+open:
+	li	$v0, 13		# Open File Syscall
+	la	$a0, file	# Load File Name
+	li	$a1, 0		# Read-only Flag
+	li	$a2, 0		# (ignored)
+	syscall
+	move	$s6, $v0	# Save File Descriptor
+	blt	$v0, 0, err	# Goto Error
+ 
+# Read Data
+read:
+	li	$v0, 14		# Read File Syscall
+	move	$a0, $s6	# Load File Descriptor
+	la	$a1, buffer	# Load Buffer Address
+	li	$a2, 1024	# Buffer Size
+	syscall
+	
+	
+# Close File
+close:
+	li	$v0, 16		# Close File Syscall
+	move	$a0, $s6	# Load File Descriptor
+	syscall
+	j	done		# Goto End
+ 
+# Error
+err:
+	li	$v0, 4		# Print String Syscall
+	la	$a0, fnf	# Load Error String
+	syscall
+	
+	li $v0, 10 #close the program if file not found
+	syscall #system call
+ 
+# Done opening and reading file into the buffer. Now, we read the buffer into the array 
+done:
+
+	la $t0, buffer #load buffer string 
+	li $t2, 0 #set loop counter to 0
+	la $t1, array #initialize the array that the buffer is being placed in. 
+loop:
+	lb $s0, 0($t0) #load a byte of the buffer to be analyzed. 
+
+	beq $s0, 0, sort #branch if character is null (EOF)
+	beq $s0, 45, skip #"handleNegative branch if character is - I AM NOT HANDLING NEGATIVE NUMBERS OR NUMBERS GREATER THAN 9
+	beq $s0, 13, skip #branch if character is \ checks for the next line character (part 1)
+	beq $s0, 10, skip #branch if character is n checks fot the next line character (part 2)
+	
+	#subi $s0, $s0, 48 #subtract to get the actual numerical value (Converts from ascii)
+#pass:	
+	move $a0, $s0 #move the 
+	li $v0, 1 # tells the system to print an integer 
+	syscall #system call
+	
+	sb $s0, 0($t1) #save byte to new array in memory
+	addi $t9, $t9, 1 #counter for number of values (used later)
+	addi $t1, $t1, 1 #increment the value in the array 
+skip: #allows the program to skip saving to the array if it is an invalid number. 
+	addi $t0, $t0, 1 #increment the value in memory (buffer) 
+	addi $t2, $t2, 1
+	beq $t2, $t4, sort
+	j loop
+	
+#handleNegative: COULD NOT GET THIS WORKING. IT WOULD SAVE TO THE ARRAY, BUT WOULD NOT SORT PROPERLY SO I REMOVED IT. 
+#	addi $t2, $t2, 1
+#	addi $t9, $t9, 1
+#	lb $s0, 0($t0)
+#	subi $s0, $s0, 48 #subtract to get the actual numerical value (Converts from ascii)
+#	mul $t7, $s0, 2
+#	sub $s0, $s0, $t7
+#	j pass
+		
+	
+sort:  #sort
+    la  $t0, array      # Copy the base address of your array into $t1
+    add $t0, $t0, 1024    # 4 bytes per int * 10 ints = 40 bytes                              
+outterLoop:             # Used to determine when we are done iterating over the Array
+    add $t1, $0, $0     # $t1 holds a flag to determine when the list is sorted
+    la  $a0, array      # Set $a0 to the base address of the Array
+innerLoop:                  # The inner loop will iterate over the Array checking if a swap is needed
+    lb  $t2, 0($a0)         # sets $t2 to the current element in array
+    lb  $t3, 1($a0)         # sets $t3 to the next element in array
+    slt $t5, $t2, $t3       # $t5 = 1 if $t0 < $t1
+    beq $t5, $0, continue   # if $t5 = 1, then swap them
+    add $t1, $0, 1          # if need to swap, check the list again
+    sb  $t2, 1($a0)         # store the greater numbers contents in the higher position in array (swap)
+    sb  $t3, 0($a0)         # store the lesser numbers contents in the lower position in array (swap)
+continue:
+    addi $a0, $a0, 1            # advance the array to start at the next location from last time
+    bne  $a0, $t0, innerLoop    # If $a0 != the end of Array, jump back to innerLoop
+    bne  $t1, $0, outterLoop    # $t1 = 1, another pass is needed, jump back to outterLoop
+
+
+init:	
+	li $t2, 0 #set a counter 
+	la $t1, array #load the array address
+	add $t1, $t1, $t9 #set the counter for the loop size
+	subi $t1, $t1, 1 #decrement 1
+	
+	la $a0, LB #load the line break
+	li $v0, 4 #print the line break
+	syscall #system call
+
+print2: #print 	
+	lb $a0, 0($t1) #load the byte from the array
+	li $v0 1 #tell the system to print an integer 
+	syscall #system call
+	subi $t1, $t1, 1 #increments array memory value
+	subi $t9, $t9, 1 #decrement counter 
+	beq $t9, $t2, end #go to end to prit the file 
+	
+	j print2 #jump back to print
+	
+		
+end: #this is the very last portion that attempts to print the sorted array to  the file. 
+
+	###############################################################
+# Open (for writing) a file that does not exist
+li   $v0, 13       # system call for open file
+la   $a0, fout     # output file name
+li   $a1, 1        # Open for writing (flags are 0: read, 1: write)
+li   $a2, 0        # mode is ignored
+syscall            # open a file (file descriptor returned in $v0)
+move $s6, $v0      # save the file descriptor 
+###############################################################
+# Write to file just opened
+li   $v0, 15       # system call for write to file
+move $a0, $s6      # file descriptor 
+la   $a1, array  # address of buffer from which to write
+li $a2, 1024       # hardcoded buffer length
+syscall            # write to file
+###############################################################
+# Close the file 
+li   $v0, 16       # system call for close file
+move $a0, $s6      # file descriptor to close
+syscall            # close file
+###############################################################
+
+li $v0, 10 #tell the system to stop finish
+syscall #system call
+
+
