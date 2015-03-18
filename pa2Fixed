@@ -1,0 +1,59 @@
+.data
+           welcome:  .asciiz "Welcome to the mysterious MIPS Program\n"
+           msg_iterate: .asciiz "Iteration: "
+           linebreak: .asciiz "\n"
+           
+            first:    .word 21 #values to be added
+                      .word 14
+                      .word 26
+                      .word 39        
+                      
+ .text
+ 	    
+            la $a0, welcome #load welcome message 
+            li $v0, 4 #tell the system to print a string	
+            syscall #system call
+                
+            la $s0, first #load address of first into $s0
+            ori $s4, 0 #load into lower 16 the value of 0 				
+            move $s1, $zero #set s1 to 0
+            
+loop: 	slti $s2, $s1, 4 # if s1 greater than 3 then set s2 to 0.                 #fixed
+            beq $s2, $zero, end # if s2 == 0 then branch to end.
+            lw $s3, 0($s0) #load word from s0 into s3 with an offset of 0 
+            
+            add $s4, $s4, $s3  #add s4 and s3. Store in s4
+            addi $s0, $s0, 4 #add 4 to s0						#fixed
+            addi $s1, $s1, 1 # add 1 to s1
+            
+            la $a0, msg_iterate # load address 
+            li $v0, 4 #tell system to print a string
+            syscall#print message iterate
+            
+            #jal printstr #jump to print
+            
+            move $a0, $s1 # move the contents of s1 to s0
+            li $v0, 1 #tell the system to print an integer 
+            syscall#system call
+           
+            la $a0, linebreak #load linebreak address
+            li $v0, 4 #tell the system to print a string
+            syscall#system call
+            
+            move $a0, $s4 #moves the total current value to a0
+	    li $v0, 1 #tells the system to print an integer
+	    syscall #system call
+	    
+	    la $a0, linebreak #load linebreak address
+            li $v0, 4 #tell the system to print a string
+            syscall#system call
+            
+            j loop #jump back to loop
+            
+
+            #removed print str as well as incorrect labels
+		
+end: 
+	li $v0, 10 #tells the system to finish
+	syscall #system call
+

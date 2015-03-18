@@ -1,0 +1,134 @@
+	.data
+fnf:	.ascii  "The file was not found: "
+arrow: 	.asciiz "->"
+msg:	.asciiz "\nThe very last value in the linked list is: "
+eol:	.asciiz "\nThe end of the list was found at position "
+file:	.asciiz	"Part3Input.txt"
+fout:	.asciiz "Part3Output.txt"
+cont:	.ascii  "File contents: "
+LB:	.asciiz "\n"
+buffer: .space 1024
+array:	.space 1024
+
+	.text
+ 
+# Open File
+open:
+	li	$v0, 13		# Open File Syscall
+	la	$a0, file	# Load File Name
+	li	$a1, 0		# Read-only Flag
+	li	$a2, 0		# (ignored)
+	syscall
+	move	$s6, $v0	# Save File Descriptor
+	blt	$v0, 0, err	# Goto Error
+ 
+# Read Data
+read:
+	li	$v0, 14		# Read File Syscall
+	move	$a0, $s6	# Load File Descriptor
+	la	$a1, buffer	# Load Buffer Address
+	li	$a2, 1024	# Buffer Size
+	syscall
+	
+# Print Data
+print: #not used
+	
+	
+ 	
+# Close File
+close:
+	li	$v0, 16		# Close File Syscall
+	move	$a0, $s6	# Load File Descriptor
+	syscall
+	j	done		# Goto End
+ 
+# Error
+err:
+	li	$v0, 4		# Print String Syscall
+	la	$a0, fnf	# Load Error String
+	syscall
+ 
+# Done(EVERYTHING IS IN THE BUFFER NOW)
+done:
+	la $t0, buffer #load buffer string 
+	li $t4, 1024 #set byte size
+	li $t2, 0 #set loop counter to 0
+	la $t1, array #initialize the array that the buffer is being placed in. 
+loop:
+	lb $s0, 0($t0)
+	beq $s0, 0, getLastElement #branch if character is null
+	beq $s0, 45, skip #branch if character is -
+	beq $s0, 13, skip #branch if character is \
+	beq $s0, 10, skip #branch if character is n
+	
+	subi $s0, $s0, 48 #subtract to get the actual numerical value
+	
+	move $a0, $s0 #prepare for print of the value in the linked list
+	li $v0, 1 #tell the system to print an integer 
+	syscall #system call
+	
+	addi $t8, $t0, 1 #increment a secondary counter (keeps track of ending index
+	lb $t8, 0($t8) #get the byte from the last index
+	beq $t8, 0, skipPrint #skip the print if the value is 0 
+	
+	la $a0, arrow #load the array string
+	li $v0, 4 #tell the system to print a string
+	syscall #system call
+	
+skipPrint:
+	sb $s0, 0($t1) #save byte
+	addi $t9, $t9, 1 #counter for number of values (used later)
+	addi $t1, $t1, 1 #increment the value in the array 
+skip: #skip
+	addi $t0, $t0, 1 #increment the value in memory (buffer) 
+	addi $t2, $t2, 1 #increment counter 
+	beq $t2, $t4, getLastElement #jump to get last element if it is finished
+	
+	j loop #jump to loop labek
+	
+
+getLastElement: #gets the last element of the linked list
+	la $a0, msg #prepares msg to print
+	li $v0, 4 #tell the system to print a string 
+	syscall	 #system call
+	
+	la $t0, array #load the address
+	subi $t9, $t9, 1 #evalate the end index
+	add $t0, $t0, $t9 #advance the memory address of the array
+	lb $a0, 0($t0) #get the value at the end of the Linked list
+	li $v0, 1 #tell the system to print an integer
+	syscall #system call
+
+# Open (for writing) a file that does not exist
+li   $v0, 13       # system call for open file
+la   $a0, fout     # output file name
+li   $a1, 1        # Open for writing (flags are 0: read, 1: write)
+li   $a2, 0        # mode is ignored
+syscall            # open a file (file descriptor returned in $v0)
+move $s6, $v0      # save the file descriptor 
+###############################################################
+# Write to file just opened
+li   $v0, 15       # system call for write to file
+move $a0, $s6      # file descriptor 
+la   $a1, array  # address of buffer from which to write
+li $a2, 1024       # hardcoded buffer length
+syscall            # write to file
+###############################################################
+# Close the file 
+li   $v0, 16       # system call for close file
+move $a0, $s6      # file descriptor to close
+syscall            # close file
+###############################################################
+
+
+end: #ending statements
+	la $a0, eol #print out end of list statement
+	li $v0, 4 #tell the system to print a string
+	syscall #system call
+	
+	move $a0, $t9 #move the counter value 
+	li $v0, 1 #tell the system to print an integer 
+	syscall #system call
+
+	li $v0, 10 #tell the system to finish
+	syscall #system call
