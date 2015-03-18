@@ -48,7 +48,3 @@ The program would have been much easier to debug if it had fully commented code 
 MIPS, or Assembly in general, is fairly arcane and difficult to follow.
 Commenting the code gives the reader a window into the thought process behind the code.
 In my modified version, I commented all of the instructions, both the original lines and my additions.
-
-
-
-
