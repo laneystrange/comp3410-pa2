@@ -1,0 +1,5 @@
+1. About 8 errors.
+
+2. The loop condition was off by one. It needed to compare the loop counter to 4, the length of the array.
+
+3. Far, far easier.

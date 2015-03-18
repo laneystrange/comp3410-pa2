@@ -81,18 +81,18 @@ You must use at least one procedure call in your solution.
 
 For our purposes, a linked list is implemented with an array, and represented as follows:
 
-* A “node” of a linked list has two components: a value and a pointer.
+* A “node�? of a linked list has two components: a value and a pointer.
 
 * Any pair of elements in the array, given by A[i] and A[i+1], forms a
-  “node” of the linked list.
+  “node�? of the linked list.
 
 * For a given node, A[i] contains the value of the node, and A[i+1]
   points to the next element in the linked list. In other words, A[i]
   is the value of the node and A[i+1] is the pointer.
 
-* The A[i+1] “pointer” gives the the array index of the next node. The
-element that it points to will always be a “value” element and not a
-“pointer” element.
+* The A[i+1] “pointer�? gives the the array index of the next node. The
+element that it points to will always be a “value�? element and not a
+“pointer�? element.
 
 * The array always begins with value/pointer pair A[0] and A[1].  A
 null pointer (signifying the end of the list) is represented by -1.
@@ -115,7 +115,7 @@ Your program should accomplish the following tasks:
   ONLY, skipping over the "pointer" elements). 
 
 * When the end of the linked-list is reached, print “end of list at
-  position X” where X is the array index where the -1 was found.
+  position X�? where X is the array index where the -1 was found.
 
 * Print these results to a file.
 

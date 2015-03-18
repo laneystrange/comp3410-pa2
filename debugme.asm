@@ -1,3 +1,12 @@
+# COMP3410 Debugme (Part 1)
+# Author: Kieran Blazier
+# Assignment: PA[2]
+# Date: 3/18/15
+
+# debugme.asm
+# Input: None
+# Output: The sum of the four numbers pointed to by first
+
 .data
             welcome:  .asciiz "Welcome to the mysterious MIPS Program\n"
             msg_iterate: .asciiz "Iteration: "
@@ -9,16 +18,12 @@
                       .word 39        
                       
  .text
-            la $v0, welcome
+            la $a0, welcome
             jal printstr
     
             la $s0, first
-            ori $s4, 0x0
-            move $s1, $zero
             
-loop: 	slt $s2, $s1, 0x03
-            beq $s2, $zero, end
-            lw $s3, 0($s0)
+loop:       lw $s3, 0($s0)
            
             add $s4, $s4, $s3
             add $s0, $s0, 0x4
@@ -27,16 +32,21 @@ loop: 	slt $s2, $s1, 0x03
             jal printstr
             
             move $a0, $s1
-            jal printstr
+            jal writeint
            
             la $a0, linebreak
             jal printstr
             
-            j loop
+            blt $s1, 0x4, loop
             
-end: move $4, $20
+end: 	    move $a0, $s4
             jal writeint
-            j _exit
+            li   $v0, 10 # system call for exit
+	    syscall
+            
+writeint:	li $v0, 1
+		syscall
+		jr $ra
             
 printstr:	li $v0, 4
 		syscall
