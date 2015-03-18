@@ -57,21 +57,21 @@ special:				# Did not implement negatives, or number larger than single digits
 
 # Sort Data
 sort:
- la $a1,array      #load a pointer to array into $a1 
+	la $a1,array      #load a pointer to array into $a1 
 
 loop:
- li $t1,20          #if $t1 is zero, load 9 into $t1
+	li $t1,20         #if $t1 is zero, load 9 into $t1
 
 loop1: 
- beqz $t1,convertBack     #if $t2 is zero, goto here 
- addi $t1,$t1,-1   #subtract 1 from $t2, save to $t2 
- lb $t5,0($a1)     #load an input int into $t5 
- lb $t6,1($a1)     #load the next one into $t6 
- addi $a1,$a1,1    #add 4 to $a1, save to $a1 
- ble $t5,$t6,loop1 #if $t5 <= $t6, goto loop1 
- sb $t5,0($a1)     #else, store $t5 in $a1 
- sb $t6,-1($a1)     #and store $t6 in $a1-4 (swapping them) 
- bgez  $t1,loop1    #if $t2 is not zero, to go loop1
+	beqz 	$t1,convertBack #if $t2 is zero, goto here 
+	addi 	$t1,$t1,-1   	#subtract 1 from $t2, save to $t2 
+	lb 	$t5,0($a1)     	#load an input int into $t5 
+	lb 	$t6,1($a1)     	#load the next one into $t6 
+	addi 	$a1,$a1,1    	#add 4 to $a1, save to $a1 
+	ble 	$t5,$t6,loop1 	#if $t5 <= $t6, goto loop1 
+	sb 	$t5,0($a1)     	#else, store $t5 in $a1 
+	sb 	$t6,-1($a1)     #and store $t6 in $a1-4 (swapping them) 
+	bgez  	$t1,loop1    	#if $t2 is not zero, to go loop1
 
 # Convert Data Back
 convertBack:			# Basically trying to undo all of the previous conversions to get sorted buffer
