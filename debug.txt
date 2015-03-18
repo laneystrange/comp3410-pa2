@@ -1,0 +1,19 @@
+So I think that there are six things I changed:
+
+
+ 1. change $v0 --> $a0 (arg is a string)
+ 2. slt ---> slti  (adding 'i's for working with immediates)  
+ 3. jal writeint.  printstr  ---> writeint because $s1 contains int
+ 4. slti $s2, $s1, 0x03 -> slti $s2, $s1, 0x04 (It only iterated three times, instead of 4)
+ 5 . #writeint was not found in the symbol table. So,wrote a writeint call.
+ 6. j _exit #_exit not found in symbols table. Changing from j _exit to using li $v0, 10 and then doing a syscall
+ 
+ 
+ 
+
+The reason is about a logic error when looping through. It was only performing 3 iterations
+so it only add 3 numbers instead of 4.
+ 
+ The program would have been incredibly easier to fix if there were comments.
+ Because if there are comments we can easily understand and read each step how the program
+ running. And it also make it easily to debug and see where we gone wrong.
