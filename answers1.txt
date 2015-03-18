@@ -1,0 +1,3 @@
+I fixed approximately 5 errors. There were lots of strange choices and superfluous things, like ori'ing a value with 0x0 that is already 0.
+The value of 3 was used when it needed to use 4, and I also changed to it to slti for immediate values.
+It would've been much better with comments, I had to add my own as I read along.

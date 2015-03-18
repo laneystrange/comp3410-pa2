@@ -4,6 +4,7 @@ file:		.asciiz "/home/evan/Documents/MIPS/comp3410-pa2/integers.txt"
 fix:		.word 0		# this gets everything word-aligned again
 buffer:		.space 1024	# room enough for 1024 characters
 numbers:	.space 1024 	# room enough for 256 integers
+fix2:		.word 0
 digits:		.space 32	# room enough for 32 characters
 .text
 
@@ -154,7 +155,7 @@ itoa:
 	
 	lw	$t0, ($a0)	# get the value of the word at the given address
 	li	$t1, 1		# the place / power value
-	li	$t2, 0		# the count of places
+	li	$t2, 1		# the count of places
 	li	$t4, 0		# the count of characters
 	la	$t6, digits	# the address of the result
 	
@@ -173,13 +174,13 @@ itoa:
 	bgtz	$t0, convert	# go to conversion if the value is positive
 	li	$t5, 45		# store at t5 the ascii value of "-"
 	sw	$t5, ($t6)	# store the - as the first char in our result
-	addi	$t6, $t6, 1		# move to the next char position
+	addi	$t6, $t6, 1	# move to the next char position
 	neg	$t0, $t0	# make it positive now!
 	
 	convert:
-		div 	$t5, $t0, $t1	# get the resulting digit of t0 divided by t1 in t5
+		div 	$t5, $t0, $t1	# put the resulting digit of t0 divided by t1 into t5
 		addi	$t5, $t5, 48	# t5 is now the ascii value of the digit that was at t5
-		sw	$t5, ($t6)	# store this ascii value in our table
+		sb	$t5, ($t6)	# store this ascii value in our table
 		addi	$t2, $t2, -1	# decrement the place count by 1
 		div	$t1, $t1, 10	# divide the power by 10
 		bgtz	$t2, convert	# if the count is still greater than 0, repeat
