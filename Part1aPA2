@@ -1,0 +1,51 @@
+.data
+            welcome:  .asciiz "Welcome to the mysterious MIPS Program\n"
+            msg_iterate: .asciiz "Iteration: "
+           linebreak: .asciiz "\n"
+           
+            first:    .word 21
+                      .word 14
+                      .word 26
+                      .word 39        
+                      
+ .text
+            la $a0, welcome #simply prepare to send this message to screen
+            jal printstr 
+    
+            la $s0, first
+            ori $s4, 0x0 
+            move $s1, $zero #moving zero to register s1
+            
+loop: 	    slti $s2, $s1, 0x04 #loop 4 iterations#set less than immediate because we are checking s1 with an immediate integer and not a register
+            beq $s2, $zero, end # if s2 is equal to 0 go to block end
+            lw $s3, 0($s0) # load the data to the register specified
+           
+            add $s4, $s4, $s3 # addiing s3 to s4 and storing s4
+            addi $s0, $s0, 0x04 #needs to have immediate due to adding immediate interger and not a register
+            addi $s1, $s1, 1 #adding q to s1 and storing in s1
+            la $a0, msg_iterate #preparing msg_iterate to be printed
+            jal printstr
+            
+            move $a0, $s1 #trying to print integer, so lets give it somewhere to go
+            jal printint #was printstr but had be changed
+           
+            la $a0, linebreak #print this linebreak to screen
+            jal printstr #jump to prinsting section then return here
+            
+            j loop #after printing jump to loop
+            
+end: 	    
+	     move $4, $20
+            jal printint #printing integer call
+            #j _exit -> replaced system call to close rather than use another label 
+            li $v0,10 #this is system call that ends program
+            syscall
+            
+printstr:	#this prints all strings instead of copying pasteing after each section
+		li $v0, 4
+		syscall
+		jr $ra
+printint: #this needed to print integers
+		li $v0, 1
+		syscall
+		jr $ra

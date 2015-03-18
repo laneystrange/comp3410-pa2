@@ -1,0 +1,16 @@
+Part1b
+Changes made:
+1.   la $a0, welcome -> needed to have a0 in order to print
+2.  slti $s2, $s1, 0x04 -> changed to 4 because we have 4 interations
+3.  j _exit -> replaced system call to close rather than use another label
+4. Added the following to print my integers when jal printint was called
+printint: #this needed to print integers
+		li $v0, 1
+		syscall
+		jr $ra
+Question 2:
+The iterations did not work due to slti $s2, $s1, 0x3; we have 4 interations not 3.
+Question 3: 
+It would have been alot easier to understand what the person was trying to do with comments. 
+Modifications to someones code is always easier when they can communicate through comments. 
+Communication is critical in all aspects of work and coding. 
