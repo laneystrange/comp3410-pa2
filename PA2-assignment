@@ -1,0 +1,146 @@
+COMP3410
+Spring 2015
+Programming Assignment #2 (PA2)
+Assigned: 3/4/15
+Deadline: 3/18/15
+
+###########################################################
+# 
+# PART ONE: 2 subparts, 30 points total
+# 
+###########################################################
+
+Download the file debugme.asm from the git repo. The program is meant
+to add 4 numbers together and print the result; however, it is full of
+bugs and doesn't even assemble correctly.
+
+For this part of the assignment, modify the debugme.asm file until it
+works as expected and answer the questions below.
+
+1A: 20 points:
+
+* Modify the program to work as expected, adding 4 numbers together and printing the result
+
+* Note that we'll grade this solution by comparing your modifications
+  to the original; make as many changes as you need, but make sure you
+  correct the original file rather than creating a new solution from
+  scratch.
+
+* Submit the modified *.asm file to the git repo.
+
+1B: 10 points
+
+Answer the following questions. Submit your answers in a plaintext
+file that you submit to the git repo.
+
+* Approximately how many errors did you find and have to correct?
+
+* Why did the program not perform all the iterations as expected?
+
+* How much easier would the program have been to debug if it had been commented?
+
+###########################################################
+#
+# PART TWO: 25 points
+# 
+###########################################################
+
+This is a warm-up problem to get familiar with file I/O and procedure
+calls in MIPS. Check out this page as a helpful resource: http://eisertdev.com/reading-files-in-mips/
+
+Your program will read in a file of integers, one number per line. It
+should be capable of managing a file of anywhere from 20-50 lines,
+with both positive and negative integers.
+
+After reading in the file and storing the integers, your program must
+invoke a procedure that sorts the integers in ascending order.
+
+Print the resulting, sorted integers into an output file.
+
+Submission:
+
+* Turn in the *.asm file with your code.
+
+* Include at least two input files that you've tested
+  succesfully. Name them PA2_input1.txt and PA2_input2.txt.
+
+* Include at least two corresponding output files, with the results of
+  running your program. Name them PA2_output1.txt and PA2_output2.txt.
+
+###########################################################
+# 
+# PART THREE: 45 points
+#
+###########################################################
+
+For this part of assignment, you will write an assembly language program that
+determines the last element in a non-empty, non-circular linked list
+of positive integers. 
+
+You must use at least one procedure call in your solution.
+
+For our purposes, a linked list is implemented with an array, and represented as follows:
+
+* A “node” of a linked list has two components: a value and a pointer.
+
+* Any pair of elements in the array, given by A[i] and A[i+1], forms a
+  “node” of the linked list.
+
+* For a given node, A[i] contains the value of the node, and A[i+1]
+  points to the next element in the linked list. In other words, A[i]
+  is the value of the node and A[i+1] is the pointer.
+
+* The A[i+1] “pointer” gives the the array index of the next node. The
+element that it points to will always be a “value” element and not a
+“pointer” element.
+
+* The array always begins with value/pointer pair A[0] and A[1].  A
+null pointer (signifying the end of the list) is represented by -1.
+
+For example, suppose you have linked-list 18->12->5. You could
+represent it with this scheme as:
+
+A[0] = 18
+A[1] = 4
+A[2] = 5
+A[3] = -1
+A[4] = 12
+A[5] = 2
+
+Your program should accomplish the following tasks:
+
+* Read a file that represents an array of size 20, following the scheme defined above.
+
+* Print out the values of the linked list, in order. (Print the values
+  ONLY, skipping over the "pointer" elements). 
+
+* When the end of the linked-list is reached, print “end of list at
+  position X” where X is the array index where the -1 was found.
+
+* Print these results to a file.
+
+For example, if the input file contains the following (smaller input
+for example purposes; remember, your input should contain 20
+elements): 
+2
+2
+5
+6
+8
+-1
+7
+4
+
+Here would be the expected output of your program (saved to a file):
+
+"Here is my linked list: 2->5->7->8. The end of the list was found at position 5."
+
+Submission:
+
+* Include your *.asm file with the program.
+
+* Include a text file with an input linked list of size 20.
+
+* Include an output file with your result.
+
+
