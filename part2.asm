@@ -151,13 +151,20 @@ sortgreat:
 toAscii:
 	la 	$s0, obuff	#load address for out buffer in s0
 	la	$s1, temp	#load the temp space
-	move	$t5, $zero	#prep counter
+	
+	li	$t1, 111
+	
+	sb	$t1, ($s1)
+	
+	
+	
 	lw 	$t0, ($s4)	#load current array value
 	addi	$s4, $s4, 4	#increment array
 	
 	beq	$t0, -45, fileout
 	
 converloop:
+	addi $s1, $s1, 1
 	bltz	$t0, negative
 	bge	$t0, 10, btone
 	
@@ -185,7 +192,7 @@ negative:
 	bge $t0, 10, btone
 	
 	addi	$t0, $t0, 48
-	j	savebs
+	j	saveb
 	
 btone:
 	rem	$t1, $t0, 10
@@ -195,31 +202,26 @@ btone:
 	
 	sb	$t1, ($s1)
 	addi	$s1, $s1, 1
-	addi	$t5, $t5, 1
+
 	
 	bge $t0, 10, btone
 	addi	$t0, $t0, 48
-	sb	$t0, ($s1)
-	addi	$s0, $s1, 1
-	addi	$t5, $t5, 1
-	j savebs
-
-savebs:
-	lb	$t0, ($s1)
 	sb	$t0, ($s0)
 	addi	$s0, $s0, 1
-	addi	$s1, $s1, -1
-	addi	$t5, $t5, -1
 	
-sbsloop: beqz 	$t5, sbsfin
 	lb	$t0, ($s1)
-	sb	$t0, ($s0)
-	addi	$s0, $s0, 1
-	addi	$s1, $s1, -1
-	addi	$t5, $t5, -1
-	j sbsloop
 	
-sbsfin:	li 	$t0, 32
+sbloop:	beq	$t0, 111, sbfin
+	
+	sb	$t0, ($s0)
+	addi 	$s0, $s0, 1
+	
+	addi	$s1, $s1, -1
+	lb 	$t0, ($s1)
+	j sbloop
+	
+	
+sbfin:	li 	$t0, 32
 	sb	$t0, ($s0)
 	addi	$s0, $s0, 1
 	
