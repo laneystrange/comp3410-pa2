@@ -22,39 +22,6 @@ la $a1, array
 jal atoi
 
 
-open:
-li $v0, 13
-la $a0, input_file
-li $a1, 0
-li $a2, 0
-syscall
-move $s6, $v0
-blt $v0, 0, error
-jr $ra
-
-read:
-li $v0, 14
-move $a0, $s6
-la $a1, buffer
-li $a2, 1024
-syscall
-jr $ra
-
-write:
-li $v0, 13
-la $a0, output_file
-li $a1, 1
-li $a2, 0
-syscall
-move $s6, $v0
-blt $v0, 0, error
-
-close:
-li $v0, 16
-move $a0, $s6
-syscall
-jr $ra
-
 ##################################################################
 # atoi - converts ASCII values to Integer values and stores them #
 ##################################################################
@@ -116,8 +83,9 @@ jr $ra				# return to the line where the 'atoi' function was called
 ##################################################################
 # itoa - converts Integer values to ASCII values and stores them #
 ##################################################################
-# $a0 = memory address of the array				 #
-# $a1 = memory address of the output_buffer			 #
+# $a0 = memory address of the array of integers to convert	 #
+# $a1 = number of integers stored in the array $a0		 #
+# $a2 = memory address of the space to place the result integers #
 # $t0 = memory address of the buffer copy			 #
 # $t1 = current byte which $t0 is pointing at			 #
 # $t2 = number of integers currently stored in $a1		 #
@@ -126,6 +94,40 @@ jr $ra				# return to the line where the 'atoi' function was called
 # $v0 = the array of converted integers to be returned		 #
 # $v1 = the number of integers in the array to be returned	 #
 ##################################################################
+itoa:
+addi $sp, $sp, -4		# shift the stack point forward by 4 bytes
+sw $ra, 0($sp)			# store the current return address onto the stack
+jal ttoz			# jump to the 'ttoz' function then return
+move $t0, $a0			# copy the memory address of the integer array $a0 into $t0
+
+itoa_begin:
+lw $t1, 0($t0)			# load the first integer from the array
+move $t2, $zero			# $t2 is the magnitude counter, reset it to 0
+addi $t2, $t2, 1		# $t2 is the magnitude counter, initalize it to 1
+move $t3, $t1			# copy the value of $t1 into $t3 so it its magnitude may be found without altering it
+j itoa_mag			# call the 'itoa_mag' function to set the magnitude counter correctly
+
+itoa_mag:
+div $t3, $t3, 10		# divide the integer value stored in $t3 by ten
+beq $t3, $zero, itoa_neg	# if the integer is now < 10, jump to 'itoa_neg', else continue
+addi $t2, $t2, 1		# increment the magnitude counter by 1
+j itoa_mag			# loop until its magnitude is counted
+
+itoa_neg:
+bgt $t1, -1, itoa_loop		# if $t1 > -1, jump to 'itoa_loop', else continue
+addi $t4, $t4, '-'		# store the negative sign character to $t4
+sb $t4, 0($a2)			# store the negative sign character in $t4 to the buffer $a2
+addi $a2, $a2, 1		# shift the buffer memory address in $a2 forward 1 byte
+mul $t1, $t1, -1		# the negative sign is already written to the buffer, so make $t1 postive again
+
+itoa_loop:		
+
+
+itoa_end:
+addi $sp, $sp, 4		# shift the stack pointer back by 4 bytes
+lw $ra, 0($sp)			# load the original return address back into $ra
+jr $ra				# return to the line where the 'itoa' function was called
+
 
 ##################################################################
 # ttoz - zeros out all temporary register values		 #
@@ -139,6 +141,39 @@ move $t5, $zero			# set $t5 to zero
 move $t6, $zero			# set $t6 to zero
 move $t7, $zero			# set $t7 to zero
 jr $ra				# return to the line where the 'ttoz' function was called
+
+open:
+li $v0, 13
+la $a0, input_file
+li $a1, 0
+li $a2, 0
+syscall
+move $s6, $v0
+blt $v0, 0, error
+jr $ra
+
+read:
+li $v0, 14
+move $a0, $s6
+la $a1, buffer
+li $a2, 1024
+syscall
+jr $ra
+
+write:
+li $v0, 13
+la $a0, output_file
+li $a1, 1
+li $a2, 0
+syscall
+move $s6, $v0
+blt $v0, 0, error
+
+close:
+li $v0, 16
+move $a0, $s6
+syscall
+jr $ra
 
 error:
 li $v0, 4			# stores syscall print string value, 4, into $v0
