@@ -1,3 +1,5 @@
+#Aaron Marshall
+#1
 .data
             welcome:  .asciiz "Welcome to the mysterious MIPS Program\n"
             msg_iterate: .asciiz "Iteration: "

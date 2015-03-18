@@ -1,3 +1,5 @@
+#Aaron Marshall
+#2
 .data
 int_array:  .space 200
 file: .asciiz "PA2_input2.txt"
@@ -70,14 +72,14 @@ loop:
 	lw  $t2, 0($a0) #load first index
    	lw  $t3, 4($a0) #loads second index 
     	slt $t5, $t3, $t2 #this sorts it in ascending order and a flag for swap
-   	beq $t5, $0, check #check flag for swap
-   	addi $t1, $0, 1 #inc flag for loop
+   	beq $t5, $zero, check #check flag for swap
+   	addi $t1, $zero, 1 #inc flag for loop
    	sw  $t2, 4($a0) #swaps numbers
    	sw  $t3, 0($a0) #swaps numbers
 check:
 	addi $a0, $a0, 4 #this increments the array
     	bne  $a0, $t0, loop #goes back to the swap loop
-    	bne  $t1, $0, forloop #another pass to make sure everything is sorted
+    	bne  $t1, $zero, forloop #another pass to make sure everything is sorted
 	
 	
 	la $a2, int_array

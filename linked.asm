@@ -1,3 +1,5 @@
+#Aaron Marshall
+#number 3
 .data
 linkedarray:  .space 80
 file: .asciiz "linkedlist.txt"
