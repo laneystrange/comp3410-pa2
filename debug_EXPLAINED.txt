@@ -1,0 +1,31 @@
+########################################################################################
+1.Approximately how many errors did you find and have to correct?
+
+There were about 8 problems that were critical to the having the program run 
+properly. Most of them were syntax issues, however there were other errors
+that required multiple lines being changed. These were that the code for "writeint"
+had to be written (3 additional lines) and the end label had to be moved to the 
+very end of the program. The 3 lines that were originally under the end label
+were changed to 2 lines that terminated the program properly. Additional changes
+were made to the program in order to have the total appear after every iteration 
+instead of just displaying it one per the instructions. This offers more evidence that
+the program is working correctly.
+########################################################################################
+2.Why did the program not perform all the iterations as expected?
+
+The original program used the expression 'slt $s2, $s1,0x03' to track the counter.
+There is a syntax error that prevented the program from even assembling at first;
+even if the integer 3 was stored in a register and the register was used int the 
+slt instruction the loop would execute one time less than it was supposed to. There
+are four numbers that need to be added to the cumulative total therefore since the
+counter starts at 0 the counter must include 3 . Therefore the slt statement was 
+modified to 'slt $s2, $s1, $t0' where $t0 holds the value 4.
+########################################################################################
+3.How much easier would the program have been to debug if it had been commented?
+
+The program would have been alot easier to debug if there were comments. The 
+program was not bad to debug because most of the code was segmented with a few 
+jumps, however when dealing with the jumps and conditional statements it gets 
+a little confusing when trying to move back and forth between the code snippets.
+Having a synopsis of the lines of code makes reviewing and debuggin code a lot 
+easier than not having comments.
