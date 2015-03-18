@@ -1,12 +1,13 @@
 #Resources used
 #http://www.cplusplus.com/reference/cstdlib/atoi/
 #http://www.cmi.ac.in/~nivedita/subjects/CO/mips-material/atoi-3.asm
-#
+#http://courses.missouristate.edu/kenvollmar/mars/help/syscallhelp.html
+#http://eisertdev.com/reading-files-in-mips/
 .data
 			.align 2
 	array:		.space	1024
 	fileinput:	.asciiz	"PA2_input2.txt"
-	fileoutput:	.asciiz	"PA2_output3.txt"
+	fileoutput:	.asciiz	"PA2_output2.txt"
 	bufferin:	.space	1024
 	bufferout:	.space	1024
 	
@@ -190,22 +191,22 @@ nullTerm:
 	sb $t6, 0($a2)		#store byte
 	
 	
-	li 	$v0, 13			# opens fileoutput
-	la 	$a0, fileoutput		# load file descriptor
-	li 	$a1, 1			# flag for writing
-	li 	$a2, 0			# ignore
-	syscall				# makes it happen
-	move 	$s7, $v0		# $s7 == file descriptor
+li 	$v0, 13			# opens fileoutput
+la 	$a0, fileoutput		# load file descriptor
+li 	$a1, 1			# flag for writing
+li 	$a2, 0			# ignore
+syscall				# makes it happen
+move 	$s7, $v0		# $s7 == file descriptor
 	
 	
 	
-	li 	$v0, 15			# setup for writing to fileoutput
-	move 	$a0, $s7		# $a0 == file descriptor
-	la 	$a1, bufferout		# $a1 == bufferout address
-	li 	$a2, 1024		# bufferout size in bytes
-	syscall				# writes to file
+li 	$v0, 15			# setup for writing to fileoutput
+move 	$a0, $s7		# $a0 == file descriptor
+la 	$a1, bufferout		# $a1 == bufferout address
+li 	$a2, 1024		# bufferout size in bytes
+syscall				# writes to file
 	
 	
-	exit:	
-	li 	$v0, 10			# setup for exiting gracefully
-	syscall		
+	
+li 	$v0, 10			# setup for exiting gracefully
+syscall		
