@@ -1,0 +1,12 @@
+1B.
+	1.
+		First error: line 12 (loads string into syscall register rather than $a0)
+		Second error: line 19 (needs to be slti rather than slt, and the immediate value needs to be four)
+		Third error: line 30 (attempting to print an int with a method that prints strings)
+		Fourth error: line 38 (not having a writeint label)
+		Fifth error: line 39 (not having an _exit label)
+	2.
+		It did not iterate enough times because the set on less than (immediate) on line 19 needed to have the immediate value of four rather than three. And...needed to be made immediate.
+
+	3.
+		Comments would have made addressing the issues present trivial as almost all of the work devoted to debugging the program was spent trying to understand the intention behind each line.
