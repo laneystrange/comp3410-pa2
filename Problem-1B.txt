@@ -1,0 +1,1 @@
+I had to correcnt about 7 errors but I was not counting so there might have been more. The main issue really was because the program was only going up to 3, and it would have made this 10 times eaiser if it already was commented.
