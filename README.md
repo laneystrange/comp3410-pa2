@@ -9,7 +9,7 @@ My answer to 1B is as follows:
 
 
 Initally, as mentioned in the instructions, debugme.asm failed to assemble.
-In total I made six changes to debugme.asm to ensure that the program both assembles and functions properly.
+In total, I made six changes to debugme.asm to ensure that the program both assembles and functions properly.
 
 1. The 'welcome' string was incorrectly loaded into the syscall call register, $v0. I changed this to correctly load into the argument register, $a0.
 2. There was a jump to a function label called 'writeint' which did not exist. I created it, along with its function, such that it would print an integer then return.
@@ -46,7 +46,7 @@ After these modifications, debugme.asm has the following output when executed:
 
 The program would have been much easier to debug if it had fully commented code from the start.
 MIPS, or Assembly in general, is fairly arcane and difficult to follow.
-Commenting the code gives the reader a mental window to the thought process behind the code.
+Commenting the code gives the reader a window into the thought process behind the code.
 In my modified version, I commented all of the instructions, both the original lines and my additions.
 
 
