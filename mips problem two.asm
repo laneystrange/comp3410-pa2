@@ -1,3 +1,8 @@
+
+#
+#was unable to finish not sure if the acsii and int conversion even work 
+
+
 #Resources used
 #http://www.cplusplus.com/reference/cstdlib/atoi/
 #http://www.cmi.ac.in/~nivedita/subjects/CO/mips-material/atoi-3.asm
@@ -36,7 +41,7 @@
 	
 #conversion to ints
 
-startatoi:
+
 	la $s0, array		# s0 contains aray
 	move $a0, $a1		# a0 contains buffer address
 	j atoi				# convert
@@ -101,6 +106,8 @@ outter:
 	#for(int i=0; i < t0; i++)
 	add $t1, $0, $0
 	la $t0, array 		#load array into t0
+	
+#out of bounds 
 inner:	
 	lw $t2, 0($t2) 		#Loads the first element of the array I
 	lw $t2, 0($t2)		# loads the next element in the array for comparison
@@ -125,7 +132,7 @@ itoa:
 	la $a0, array
 	move $a1, $s5
 	la $a2, bufferout
-startitoa:
+
 	lw $t0, 0($a0)		#load element from array
 	move $t1, $zero		#zero out t1
 	addi $t1, $t1, 1	#set t1 to the starting magnitude
