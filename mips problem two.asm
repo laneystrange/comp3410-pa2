@@ -192,3 +192,72 @@ SortisDone:
 	
 	
 	
+	
+	
+
+
+
+intToAscii:
+	beqz $a1, return	# if we have a zeri un register a1 then  do nothing
+start:	lw $t1, 0($a0)		
+	move $t2, $zero		
+	addi $t2, $t2, 1	
+	move $t7, $t1		
+	j magfind		
+	move $t7, $zero		
+negative:
+	bgt $t1, -1, positive	
+	addi $t7, $t7, '-'	
+	sb $t7, 0($a2)		
+	addi $a2, $a2, 1	
+	mul $t1, $t1, -1	
+positive:
+	move $t3, $a0		
+	move $t4, $a1		
+	move $a0, $zero		
+	addi $a0, $a0, 10	
+	move $a1, $t2		
+	move $t6, $zero		
+	addi $t6, $t6, 1	
+	j exp
+eret:	move $a0, $t3		
+	move $a1, $t4		
+notdone:
+	div $t7, $t1, $t6	
+	mul $t5, $t7, $t6	
+	sub $t1, $t1, $t5	
+	addi $t7, $t7, '0'	
+	div $t6, $t6, 10	
+	sb $t7, 0($a2)		
+	addi $a2, $a2, 1	
+	bne $t6, 0, notdone	
+	j nextint		
+	
+magfind:
+	div $t7, $t7, 10 	
+	beq $t7, 0, negative	
+	addi $t2, $t2, 1	
+	j magfind		
+
+	
+exp:	beq $a1, 1, nil
+	mul $t6, $t6, $a0
+	addi $a1, $a1, -1
+	bgt $a1, 1, exp
+nil:	j eret
+	
+nextint:
+	move $t7, $zero		
+	addi $t7, $t7, 10	
+	sb $t7, 0($a2)		
+	addi $a2, $a2, 1	
+	addi $a1, $a1, -1	
+	beqz $a1, return	
+	addi $a0, $a0, 4	
+	j start			
+				
+return:	jr $ra			
+# Done
+done:
+	li	$v0, 10		# Exit Syscall
+	syscall
