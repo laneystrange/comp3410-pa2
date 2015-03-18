@@ -1,3 +1,7 @@
+# Robert L. Edstrom
+# COMP3410 PA2
+# Part 1a 
+
 .data
             welcome:     .asciiz "Welcome to the mysterious MIPS Program\n"
             msg_iterate: .asciiz "Iteration: "
