@@ -214,8 +214,8 @@ sw $t3, 0($a0) 			# $t3 = index i
 
 sort_swap:
 addi $a0, $a0, 4 		# increment the array by 4 bytes
-bne $a0, $t0, sort_inner_loop	# if $a0 != to the end of the array, jump to innerloop
-bne $t1, $0, sort_outer_loop	# if $t1 == one the list isn't fully sorted, jump to outerloop
+bne $a0, $t0, sort_inner_loop	# if $a0 is not yet to the end of the array, jump to 'sort_inner_loop'
+bne $t1, $0, sort_outer_loop	# if $t1 is 1 the list is not sorted, jump to 'sort_outer_loop'
 jr $ra				# return to the line where the 'sort' function was called
 
 ##################################################################
