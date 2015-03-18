@@ -1,0 +1,13 @@
+Frank Martino 3/16/2015
+
+Approximately how many errors did you find and have to correct?
+	
+	I would say somewhere around 20
+	
+Why did the program not perform all the iterations as expected?
+
+	Initially it did not assemble once fixed it did not iterate the right number of times, because the marker was not ready
+	
+How much easier would the program have been to debug if it had been commented?
+
+	Comments would have made debugging the code much easier than it was.
