@@ -4,8 +4,8 @@
 
 ###### PART ONE
 
-My answer to 1A is located in the original debugme.asm file, which I have modified.
-My answer to 1B is as follows:
+My answer to part one A is located in the original debugme.asm file, which I have modified.
+My answer to part one B is as follows:
 
 
 Initally, as mentioned in the instructions, debugme.asm failed to assemble.
@@ -48,3 +48,13 @@ The program would have been much easier to debug if it had fully commented code 
 MIPS, or Assembly in general, is fairly arcane and difficult to follow.
 Commenting the code gives the reader a window into the thought process behind the code.
 In my modified version, I commented all of the instructions, both the original lines and my additions.
+
+###### PART TWO
+
+My answer to part two is located in parttwo.asm.
+The two input files are PA_input1.txt and PA_input2.txt respectively.
+The two output files are PA_output1.txt and PA_output2.txt respectively.
+
+###### PART THREE
+
+My answer to part three is located in partthree.asm.
