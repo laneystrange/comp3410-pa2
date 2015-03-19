@@ -1,0 +1,218 @@
+.data
+	file: .asciiz "PA2_input1.txt"
+	outf: .asciiz "PA2_output1.txt"
+	bufstart: .ascii ""
+	buffer: .space 1024
+	bufend: .asciiz ""
+	outs:	.ascii ""
+	outb:	.space 1024
+	oute:	.asciiz ""
+	.align 2
+	array: .space 1024
+.text	
+main:
+	# Open file
+	li $v0, 13
+	la $a0, file
+	li $a1, 0
+	li $a2, 0
+	syscall
+	move $s6, $v0
+	
+	# Read data
+	li $v0, 14
+	move $a0, $s6
+	la $a1, buffer
+	li $a2, 1024
+	syscall
+	
+	# Close file
+	li $v0, 16
+	move $a0, $s6
+	syscall
+	
+	# Access data
+	la $a0, buffer		# Puts the location of buffer in a0
+	la $a1, array		# Puts the location of output in a1
+	jal atoi		# Parses list of strings into ints
+	jal zerotemps
+	la $a0, array		# Puts array into a0
+	move $a1, $v1		# Moves the number of elements in that array to a1
+	move $s1, $v1		# store ints here.
+	jal selsort		# Sorts the ints
+	jal zerotemps
+	
+	# Open new file
+	li $v0, 13		# Opens new file to write sorted ints
+	la $a0, outf		# Loads file
+	li $a1, 1
+	li $a2, 0
+	syscall
+	move $s2, $v0
+	
+	la $a0, array		# Moves sorted array of ints to a0
+	move $a1, $s1		# Moves the number of ints to a1
+	la $a2, outb		# Moves the output buffer to a2
+	jal itoa
+	
+	li $v0, 15	
+	move $a0, $s2		# Moves our file to a0
+	la $a1, outb		# Locates write buffer
+	li $a2, 1024
+	syscall			# Writes to the file
+	
+	j exit
+	
+atoi:
+	
+	move $t7, $a0 		# Copy the input string address
+	move $v0, $zero
+reset:	lb $t0, 0($t7)		# Get the first byte
+	move $t5, $zero
+	bne $t0, 45, loop
+	
+isneg:	addi $t5, $t5, 1 	
+	addi $t7, $t7, 1 	# Move string forward 1
+	
+	
+loop:	lb $t0, 0($t7)		# Get current byte
+	beq $t0, 10, last	
+	beq $t0, 0, last
+	subi $t0, $t0, '0'	# Find the decimal value from ASCII value
+	mul $t6, $t6, 10
+	add $t6, $t6, $t0
+	addi $t7, $t7, 1	# Move forward 1
+	j loop
+	
+last:
+	bne $t5, 1, store	# If positive, skip 
+	mul $t6, $t6, -1	# Set the number to negative otherwise.
+	j store
+	
+store:	sw $t6, 0($a1)		# Stores current integer
+	addi $a1, $a1, 4	# Moves pointer forward
+	addi $t7, $t7, 1	
+	move $t6, $zero
+	beq $t0, 0, parsed
+	addi $t4, $t4, 1	# Increments the number of elements in the array by 1.
+	j reset
+	
+parsed:
+	move $v0, $a1		# Moves the output array to the results register
+	move $v1, $t4		# Stores the number of elements in array
+	jr $ra
+
+
+selsort:
+
+setup:	move $t0, $zero		# Sets our current number to zero
+	move $t2, $a0		# Sets the unsorted boundary
+	move $t3, $zero		# Sets our iterations counter to zero
+new:
+	move $t3, $zero		# Resets the iteration counter
+	move $t4, $t2
+	move $t1, $zero		# Zero out min
+	addu $t1, $t1, 2147479548
+thisitr:
+	beq $a1, 0, sortdone
+	lw $t0, 0($t4)		# Loads the leftmost element in the unsorted portion
+	blt $t0, $t1, setmin	# Set min if the current number is less than the current min.
+resume:	addi $t3, $t3, 1	# Increments the iteration counter
+	addi $t4, $t4, 4	# Moves the pointer
+	beq $t3, $a1, sort
+	j thisitr
+
+sort:	lw $t5, 0($t6)		# Load the current min into a temp
+	lw $t7, 0($t2)		# Load the leftmost element into a temp
+	sw $t5, 0($t2)		# Put the current minimum into the leftmost position
+	sw $t7, 0($t6)		 
+	addi $t2, $t2, 4	# Advance forward one element
+	addi $a1, $a1, -1	
+	j new
+
+setmin:	move $t6, $t4		# Get the address of new min
+	move $t1, $t0		# Set the new min
+	j resume
+
+sortdone:
+	move $v0, $a0		# Move array to result register
+	jr $ra			
+
+itoa:
+	beqz $a1, return
+start:	lw $t1, 0($a0)		# Loads the current element in the array
+	move $t2, $zero
+	addi $t2, $t2, 1
+	move $t7, $t1		
+	j magfind		
+	move $t7, $zero		
+negative:
+	bgt $t1, -1, positive	
+	addi $t7, $t7, '-'	
+	sb $t7, 0($a2)		
+	addi $a2, $a2, 1	
+	mul $t1, $t1, -1	
+positive:
+	move $t3, $a0
+	move $t4, $a1
+	move $a0, $zero
+	addi $a0, $a0, 10
+	move $a1, $t2
+	move $t6, $zero
+	addi $t6, $t6, 1	# Set to 1
+	j exp
+eret:	move $a0, $t3		# Restores original values
+	move $a1, $t4
+notdone:
+	div $t7, $t1, $t6	# Gets the leftmost digit
+	mul $t5, $t7, $t6	# Gets the adjusted value
+	sub $t1, $t1, $t5	# Gives us the other digits 
+	addi $t7, $t7, '0'	# Gets the ASCII value
+	div $t6, $t6, 10	# Reduces register by a factor of 10
+	sb $t7, 0($a2)		
+	addi $a2, $a2, 1	# Advances the buffer one byte
+	bne $t6, 0, notdone
+	j nextint
+	
+	
+	
+	
+magfind:
+	div $t7, $t7, 10 	# Divides the number by ten
+	beq $t7, 0, negative	
+	addi $t2, $t2, 1	
+	j magfind		
+
+exp:	beq $a1, 1, nil
+	mul $t6, $t6, $a0
+	addi $a1, $a1, -1
+	bgt $a1, 1, exp
+nil:	j eret
+	
+nextint:
+	move $t7, $zero		
+	addi $t7, $t7, 10	# Puts a newline into our writing register
+	sb $t7, 0($a2)		# Writes the newline
+	addi $a2, $a2, 1	# Advances the write buffer one 
+	addi $a1, $a1, -1	# Decrements the number by 1.
+	beqz $a1, return	
+	addi $a0, $a0, 4	# Advances to the next element in the array
+	j start			
+				
+return:	jr $ra			
+
+zerotemps:
+
+	move $t0, $zero	
+	move $t1, $zero 
+	move $t2, $zero 
+	move $t3, $zero 
+	move $t4, $zero 
+	move $t5, $zero 
+	move $t6, $zero 
+	move $t7, $zero 
+	jr $ra			
+
+
+exit:	li $v0, 10
+	syscall
