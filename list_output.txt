@@ -1,0 +1,2 @@
+Here is my linked list: 8 -> 9 -> -2 -> 22 -> 0 -> -5 -> 1 -> 62 -> 3 -> 7.
+The end of the list was found at position 4.

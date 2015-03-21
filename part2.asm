@@ -13,9 +13,9 @@
 
 fnf:	.ascii  "The file was not found: "
 input:	.asciiz "PA2_input1.txt"
+ferr: .ascii "Error writing to: "
 output: .asciiz "PA2_output1.txt"
 newline: .asciiz "\n"
-number:	.asciiz "120"
 
 buffer: .space 256
 
@@ -31,7 +31,7 @@ main:
 	li $a2, 0		# (ignored)
 	open
 	
-	bltz $v0, err		# handle any errors
+	bltz $v0, input_err	# handle any errors
 	
 	move $s6, $v0		# save the file descriptor
 	
@@ -50,7 +50,7 @@ input.loop:
 	move, $s3, $v0		# save the string
 	
 	lb $t0, 0($v0)		# *check for null string
-	beqz $t0, input.end
+	beqz $t0, input.end	# *
 	
 	move $a0, $s3		# pass the string
 	jal atoi		# call atoi
@@ -68,65 +68,73 @@ input.loop:
 input.end:
 	move $a0, $s6		# pass the file descriptor
 	close			# close the input file
-	sw $s2, size
+	sw $s2, size		# write the size
 	
 	la $a0, array		# pass the array
 	lw $a1, size		# pass the length
 	jal selection_sort	# sort the array
+	
+	
+	la $s0, buffer		# load the buffer pointer
+	la $s1, array		# load the array pointer
+	li $s2, 0		# init the index
+	lw $s3, size		# load the size of the array
+output.loop:
+	sll $t0, $s2, 2		# i * 4
+	add $t0, $t0, $s1	# array + i * 4
+	lw $t0, 0($t0)		# array[i]
+	
+	move $a0, $t0		# pass array[i]
+	jal itoa		# convert to string
+	
+	move $a0, $v0		# *write the string
+	move $a1, $s0		# *
+	jal strcopy		# *
+	
+	add $s0, $s0, $v0	# move the buffer pointer along by bytes written
+	
+	la $a0, newline		# *write newline
+	move $a1, $s0		# *
+	jal strcopy		# *
+	
+	add $s0, $s0, $v0	# move the buffer pointer along by bytes written
+	
+	add $s2, $s2, 1		# increment the index
+	blt $s2, $s3, output.loop	# loop while less than array length
+	
+	la $t0, buffer		# *compute the length of the written string
+	sub $t0, $s0, $t0	# *
 	
 	la $a0, output		# load the output file name file 
 	li $a1, 1		# open as write-only
 	li $a2, 0		# (ignored)
 	open
 	
-	bltz $v0, err		# handle any errors
+	bltz $v0, output_err	# handle any errors
 	
 	move $s6, $v0		# save the file descriptor
-	
-	la $s0, buffer		# 
-	la $s1, array
-	li $s2, 0
-	lw $s3, size
-output.loop:
-	sll $t0, $s2, 2
-	add $t0, $t0, $s1
-	lw $t0, 0($t0)
-	
-	move $a0, $t0
-	jal itoa
-	
-	move $a0, $v0
-	move $a1, $s0
-	jal strcopy
-	
-	add $s0, $s0, $v0
-	
-	la $a0, newline
-	move $a1, $s0
-	jal strcopy
-	
-	add $s0, $s0, $v0
-	
-	add $s2, $s2, 1
-	blt $s2, $s3, output.loop
-	
-	la $t0, buffer
-	sub $t0, $s0, $t0
 	
 	move $a0, $s6		# pass the file descriptor
 	la $a1, buffer		# pass the buffer
 	move $a2, $t0		# pass the buffer length
 	write
 	
-	move $a0, $s6
-	close
+	move $a0, $s6		# pass the file descriptor
+	close			# close the output file
 	
 	exit
 	
-err:	
+input_err:	
 	la	$a0, fnf	# load error string
 	print_str
 	exit
+	
+output_err:	
+	la	$a0, ferr	# load error string
+	print_str
+	exit
+	
+
 	
 ##########################################################
 # function: selection_sort
